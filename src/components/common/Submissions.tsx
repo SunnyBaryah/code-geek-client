@@ -34,7 +34,7 @@ export default function Submissions() {
       <h1 className="text-2xl">Loading...</h1>
     </div>
   ) : submissions && submissions.length > 0 ? (
-    <div className="flex flex-col w-full border-t-2 border-gray-900 max-h-[77vh] overflow-auto">
+    <div className="flex flex-col w-full border-t-2 border-gray-900 max-h-[50vh] lg:max-h-[77vh] overflow-auto">
       <div className="flex justify-between w-full px-4 py-2 border-b border-gray-600">
         <h1 className="font-bold">Status</h1>
         <h3 className="font-bold">Submit Date</h3>
@@ -61,7 +61,7 @@ export default function Submissions() {
       })}
     </div>
   ) : (
-    <div className="flex justify-center">
+    <div className="flex justify-center py-4">
       <h1 className="text-2xl">No Submissions!</h1>
     </div>
   );

@@ -14,8 +14,8 @@ import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { BOILERPLATES } from "@/constants.ts";
 import { BOILERPLATE } from "@/constants.ts";
-import { OnMount} from "@monaco-editor/react";
-import { editor as monacoEditor } from 'monaco-editor';
+import { OnMount } from "@monaco-editor/react";
+import { editor as monacoEditor } from "monaco-editor";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 export default function MonacoEditor(props: EditorProps) {
-  const monacoEditorRef = useRef<monacoEditor.IStandaloneCodeEditor | null>(null);
+  const monacoEditorRef = useRef<monacoEditor.IStandaloneCodeEditor | null>(
+    null
+  );
   const [value, setValue] = useState("");
   const [input, setInput] = useState<string>();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -33,18 +35,20 @@ export default function MonacoEditor(props: EditorProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [langCode, setLangCode] = useState<number>(54);
   const probId: number = Number(useParams().problemId);
-  const problemCodesObject:BOILERPLATE=BOILERPLATES.find((entry)=>entry.problem_id===probId)!;
-  const problemCodes=problemCodesObject.langs;
+  const problemCodesObject: BOILERPLATE = BOILERPLATES.find(
+    (entry) => entry.problem_id === probId
+  )!;
+  const problemCodes = problemCodesObject.langs;
   useEffect(() => {
-    switch (langCode){
+    switch (langCode) {
       case 54:
-          setValue(problemCodes[0]);
-          break;
-        case 63:
-          setValue(problemCodes[1]);
-          break;
-        default:
-          setValue(problemCodes[2]);
+        setValue(problemCodes[0]);
+        break;
+      case 63:
+        setValue(problemCodes[1]);
+        break;
+      default:
+        setValue(problemCodes[2]);
     }
   }, [langCode, problemCodes]);
 
@@ -52,7 +56,7 @@ export default function MonacoEditor(props: EditorProps) {
     setInput(props.test_cases[0].input);
   }, [props.test_cases]);
 
-  const onMount:OnMount = (editor) => {
+  const onMount: OnMount = (editor) => {
     monacoEditorRef.current = editor;
     editor.focus();
   };
@@ -112,7 +116,7 @@ export default function MonacoEditor(props: EditorProps) {
       // console.log(wrong.length);
       let finalStatus = "";
       if (wrong.length == 0) {
-        finalStatus = "Accpeted";
+        finalStatus = "Accepted";
         const response = await authService.addSolvedProblem({
           problem_id: probId,
           difficulty: props.difficulty,
@@ -136,7 +140,7 @@ export default function MonacoEditor(props: EditorProps) {
     }
   };
   return (
-    <div className={`mt-2 ${props.className}`}>
+    <div className={`mt-2  ${props.className}`}>
       <div className="w-full py-1 mb-2 flex justify-between items-center">
         <motion.button
           onClick={handleRun}
@@ -167,13 +171,19 @@ export default function MonacoEditor(props: EditorProps) {
             >
               <div className="flex">
                 <div className="flex items-center justify-center gap-2 border-r border-r-gray-700 bg-gray-600 hover:bg-gray-700 transition duration-150 rounded-l-md px-2 py-1">
-                  <Button className=" text-white hover:scale-100 " onClick={handleRun}>
+                  <Button
+                    className=" text-white hover:scale-100 "
+                    onClick={handleRun}
+                  >
                     Run
                   </Button>
                   <img className="h-[20px]" src={runIcon} />
                 </div>
                 <div className="flex items-center gap-2 justify-center border-l border-l-gray-700 bg-gray-600 hover:bg-gray-700 transition duration-150 rounded-r-md pl-2 pr-1">
-                  <Button className=" text-white hover:scale-100 " onClick={handleSubmit}>
+                  <Button
+                    className=" text-white hover:scale-100 "
+                    onClick={handleSubmit}
+                  >
                     Submit
                   </Button>
                   <img className="h-[20px]" src={submitIcon} />
@@ -226,12 +236,18 @@ export default function MonacoEditor(props: EditorProps) {
         <div className="mx-auto w-[99%] h-[90%]">
           <Editor
             theme="vs-dark"
-            language={langCode===54?"cpp":(langCode===63?"javascript":"python")}
+            language={
+              langCode === 54
+                ? "cpp"
+                : langCode === 63
+                ? "javascript"
+                : "python"
+            }
             value={value}
             onMount={onMount}
             onChange={(value) => setValue(value ?? "")}
-            />
-          </div>
+          />
+        </div>
       </div>
       <div className="w-full bg-gray-800 text-white mr-2 rounded-md pt-1 pb-2 px-4 mt-2 max-h-40 overflow-auto">
         <AnimatePresence>

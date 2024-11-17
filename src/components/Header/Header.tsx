@@ -6,28 +6,30 @@ import { Link } from "react-router-dom";
 import logo from "/logo-png.png";
 import puzzleIcon from "/puzzle-icon.svg";
 import { RootState } from "../../store/store";
-import homeIcon from "/user-circle-icon.svg";
+import homeIcon from "/user-duotone-icon.svg";
 export default function Header() {
   const navigate = useNavigate();
-  const status = useSelector((state:RootState) => state.auth.status);
+  const status = useSelector((state: RootState) => state.auth.status);
 
   const navItems = [
     {
       name: "Login",
       slug: "/login",
-      class: "border border-gray-500 bg-gray-800 py-1.5 text-white hover:scale-105 transition duration-150",
+      class:
+        "border border-gray-500 bg-gray-800 py-1.5 text-white hover:scale-105 transition duration-150",
       active: !status,
     },
     {
       name: "Sign up",
       slug: "/sign-up",
-      class: "bg-[#FFC100] text-gray-900 hover:scale-105 transition duration-150",
+      class:
+        "bg-[#FFC100] text-gray-900 hover:scale-105 transition duration-150",
       active: !status,
     },
   ];
   return (
     <div className="bg-gray-700">
-      <div className="flex items-center w-[80%] mx-auto">
+      <div className="flex items-center w-[88%] xl:w-[80%] mx-auto">
         <Link to="/" className="  text-white py-2 text-2xl">
           <img className="h-[48px]" src={logo} />
         </Link>
@@ -44,27 +46,23 @@ export default function Header() {
               ) : null
             )}
             {status && (
-              
-                <Link
-                  to="/dashboard"
-                  className="py-2 text-2xl  hover:scale-105 transition duration-150"
-                >
-                  {/* <AvatarIcon className="h-[40px]"/> */}
-                  <img className=" h-[44px]" src={homeIcon} />
-                </Link>
-              
+              <Link
+                to="/dashboard"
+                className="py-2 text-2xl  hover:scale-105 transition duration-150"
+              >
+                {/* <AvatarIcon className="h-[40px]"/> */}
+                <img className=" h-[44px]" src={homeIcon} />
+              </Link>
             )}
             {status && (
-              
-                <Link
-                  to="/problems"
-                  className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
-                >
-                  <img className=" h-[35px]" src={puzzleIcon} />
-                </Link>
-              
+              <Link
+                to="/problems"
+                className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
+              >
+                <img className=" h-[35px]" src={puzzleIcon} />
+              </Link>
             )}
-            {status && (<LogoutBtn />)}
+            {status && <LogoutBtn />}
           </div>
         </nav>
       </div>

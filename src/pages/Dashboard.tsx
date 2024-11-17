@@ -16,7 +16,9 @@ interface SolvedQuestions {
 export default function Dashboard() {
   const [solvedQuestions, setSolvedQuestions] = useState<SolvedQuestions[]>();
   const [loading, setLoading] = useState<boolean>(true);
-  const userData:{username:string; email:string;} = useSelector((state:RootState) => state.auth.userData) || { username: "", email: "" };;
+  const userData: { username: string; email: string } = useSelector(
+    (state: RootState) => state.auth.userData
+  ) || { username: "", email: "" };
   // console.log(userData);
   useEffect(() => {
     const getSolvedQuestions = async () => {
@@ -27,14 +29,14 @@ export default function Dashboard() {
     getSolvedQuestions();
   }, []);
   return (
-    <div className="text-white py-4 mx-auto w-[80%] h-[60vh] grid grid-cols-3 grid-rows-2 gap-2">
-      <div className="h-full px-2 col-span-1 bg-gray-800 row-span-1 rounded-md">
+    <div className="text-white py-4 mx-auto w-[95%] xl:w-[80%] flex flex-wrap justify-between xl:gap-2">
+      <div className="mb-4 w-full lg:w-[40%] px-2 col-span-1 bg-gray-800 row-span-1 rounded-md">
         <div className="text-center py-3">
           <h1 className="font-semibold text-3xl">User Details</h1>
         </div>
-        <div className="h-[60%] w-full flex items-center justify-center gap-4">
-          <div className="h-full flex justify-center items-center">
-            <img className="h-[90%] rounded-md" src={avatar} />
+        <div className="w-full flex items-center justify-center lg:mt-3 2xl:mt-1 gap-4">
+          <div className="w-[30%] md:w-[20%] xl:w-[35%] 2xl:w-[30%] flex justify-center items-center">
+            <img className="rounded-md" src={avatar} />
           </div>
           <div className="flex flex-col items-start justify-center">
             <h1 className="font-semibold text-xl">{userData.username}</h1>
@@ -42,7 +44,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-10 col-span-2 bg-gray-800 py-4 row-span-1 rounded-md">
+      <div className="mb-4 w-full lg:w-[59%] flex flex-col gap-12 xl:gap-16 2xl:gap-20 bg-gray-800 py-4 row-span-1 rounded-md">
         <h1 className="text-center font-semibold text-3xl">Current Progress</h1>
         {loading ? (
           <div className="w-full flex flex-col gap-6 justify-center items-center">
@@ -79,9 +81,9 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-      <div className="flex flex-col items-center gap-2 col-span-3 bg-gray-800 row-span-1 rounded-md h-[50vh] max-h-[50vh] overflow-auto">
+      <div className="w-full flex flex-col items-center gap-5  bg-gray-800 row-span-1 rounded-md h-[50vh] max-h-[50vh] overflow-auto">
         <h1 className="font-semibold text-3xl pt-4 pb-3">Solved Problems</h1>
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-3 w-full ">
           {loading ? (
             <div className="my-2 w-full flex flex-col justify-center items-center">
               <Skeleton className="bg-gray-700 w-[80%] h-[60px]" />
@@ -90,7 +92,7 @@ export default function Dashboard() {
             solvedQuestions.map((question: SolvedQuestions, index: number) => {
               return (
                 <Link key={index} to={`/problems/${question.problem_id}`}>
-                  <div className="w-[80%] mx-auto flex justify-between bg-gray-600 px-3 py-2 rounded-md hover:scale-105 transition duration-200">
+                  <div className="text-sm xl:text-lg w-[90%] xl:w-[80%] mx-auto flex justify-between bg-gray-600 px-3 py-2 rounded-md hover:scale-105 transition duration-200">
                     <h1>
                       {question.problem_id}. {question.problem_title}
                     </h1>

@@ -12,7 +12,7 @@ export default function ProblemsPage() {
       setLoading(true);
       const response = await problemService.getAllProblems();
       setAllProblems(response.data.data.foundProblem);
-    //   console.log(allProblems);
+      //   console.log(allProblems);
       setLoading(false);
     };
     problemsFetcher();
@@ -23,7 +23,7 @@ export default function ProblemsPage() {
       <h1 className="text-center my-4 text-white text-4xl font-semibold">
         DSA Problems
       </h1>
-      <div className="flex-col w-[60%] mx-auto py-4 rounded-md bg-gray-800 min-h-[80vh] max-h-[80vh] overflow-auto shadow-md">
+      <div className="flex-col w-[80%] xl:w-[60%] mx-auto py-4 rounded-md bg-gray-800 min-h-[80vh] max-h-[80vh] overflow-auto shadow-md">
         {loading ? (
           <div className="flex flex-col gap-5">
             <Skeleton className="w-[80%] mx-auto h-[35px] bg-gray-600" />
