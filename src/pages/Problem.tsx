@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { Problem } from "../interfaces/Problem.ts";
 import { QuestionData } from "../interfaces/QuestionData.ts";
 import Submissions from "../components/common/Submissions.tsx";
-
+import { useDispatch } from "react-redux";
+import { clearSubmissions } from "@/store/submissionsSlice.ts";
 export default function ProblemPage() {
   const [problem, setProblem] = useState<Problem | undefined>(undefined);
   const [question, setQuestion] = useState<QuestionData | undefined>(undefined);
   const [leftIndex, setLeftIndex] = useState<number>(0);
   const id: number = Number(useParams().problemId);
+  const dispatch = useDispatch();
   // const id:{problemId:AxiosRequestConfig<number>}=useParams();
   // console.log(id);
   useEffect(() => {
@@ -23,6 +25,13 @@ export default function ProblemPage() {
     };
     problemFetcher();
   }, [id]);
+
+  // To clear the submissions when the page is unmounted
+  useEffect(() => {
+    return () => {
+      dispatch(clearSubmissions());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (problem) {

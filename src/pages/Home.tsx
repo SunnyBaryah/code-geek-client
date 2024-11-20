@@ -32,12 +32,26 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex flex-col xl:flex-row justify-center xl:justify-between items-center gap-8 md:gap-12 xl:gap-20 w-[95%] xl:w-[90%] 2xl:w-[80%] mx-auto">
-            <h2 className="w-[95%] xl:w-[70%] text-4xl text-center md:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight">
-              <span className="">Master Coding</span>
-              <span className=" text-[#FFC100]">, </span>
-              <span className="">One Challenge at a Time</span>
-              <span className=" text-[#FFC100]">.</span>
-            </h2>
+            <div className="w-[95%] xl:w-[70%] flex flex-col justify-between items-center gap-10">
+              <h2 className="text-4xl text-center md:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight">
+                <span className="">Master Coding</span>
+                <span className=" text-[#FFC100]">, </span>
+                <span className="">One Challenge at a Time</span>
+                <span className=" text-[#FFC100]">.</span>
+              </h2>
+              {isLoggedIn === false && (
+                <div className="w-full flex justify-center">
+                  <button
+                    className="hidden xl:block w-[40%] rounded-md bg-[#FFC100] text-gray-800 text-center hover:scale-105 transition duration-150 p-4 text-2xl"
+                    onClick={() => {
+                      navigate("/sign-up");
+                    }}
+                  >
+                    Sign Up
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="w-[95%] xl:w-[30%] flex justify-center">
               <img
                 className="self-center col-span-2 h-[190px] md:h-[250px] xl:h-[280px] 2xl:h-[300px]"
@@ -46,8 +60,9 @@ export default function Home() {
             </div>
           </div>
           {isLoggedIn === false && (
-            <div className="xl:hidden w-[70%] mx-auto mt-20 mb-10 rounded-md bg-[#FFC100] text-gray-800 text-center hover:scale-105 transition duration-150 p-4 text-2xl">
+            <div className="w-full flex justify-center">
               <button
+                className="xl:hidden w-[70%] mx-auto mt-20 mb-10 rounded-md bg-[#FFC100] text-gray-800 text-center hover:scale-105 transition duration-150 p-4 text-2xl"
                 onClick={() => {
                   navigate("/sign-up");
                 }}

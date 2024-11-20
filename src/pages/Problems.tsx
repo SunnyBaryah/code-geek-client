@@ -3,15 +3,27 @@ import { useEffect, useState } from "react";
 import ProblemCard from "../components/common/ProblemCard";
 import { Problem } from "../interfaces/Problem";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { setProblems } from "@/store/problemsSlice";
 export default function ProblemsPage() {
   const [allProblems, setAllProblems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const stateData = useSelector((state: RootState) => state.problems.problems);
   useEffect(() => {
     const problemsFetcher = async () => {
       setLoading(true);
-      const response = await problemService.getAllProblems();
-      setAllProblems(response.data.data.foundProblem);
+      let data;
+      if (stateData.length > 0) {
+        // console.log("State Data : ", stateData);
+        data = stateData;
+        setAllProblems(data);
+      } else {
+        data = await problemService.getAllProblems();
+        dispatch(setProblems(data.data.data.foundProblem));
+        setAllProblems(data.data.data.foundProblem);
+      }
       //   console.log(allProblems);
       setLoading(false);
     };

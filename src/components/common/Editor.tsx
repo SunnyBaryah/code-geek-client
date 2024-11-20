@@ -64,6 +64,26 @@ export default function MonacoEditor(props: EditorProps) {
     setSelectedIndex(index);
     setInput(props.test_cases[index].input);
   };
+
+  const getMostRepeatingElement = (arr: string[]): string => {
+    if (arr.length === 0) return "";
+
+    const frequencyMap: Record<string, number> = {};
+    let maxCount = 0;
+    let mostFrequentElement: string = "";
+
+    for (const str of arr) {
+      frequencyMap[str] = (frequencyMap[str] || 0) + 1;
+
+      if (frequencyMap[str] > maxCount) {
+        maxCount = frequencyMap[str];
+        mostFrequentElement = str;
+      }
+    }
+
+    return mostFrequentElement;
+  };
+
   const handleRun = async () => {
     if (monacoEditorRef.current) {
       setLoading(true);
@@ -75,19 +95,39 @@ export default function MonacoEditor(props: EditorProps) {
         language_id: langCode,
         test_cases,
       });
-      // console.log(response.data.data.allStatuses);
-      const wrong = response.data.data.allStatuses.filter(
-        (obj: { status: { id: number; description: string } }) => {
-          // console.log(obj.status.id);
-          return obj.status.id !== 3;
-        }
+      // console.log("All statuses : ", response.data.data.allStatuses);
+      const results: string[] = response.data.data.allStatuses
+        .reduce(
+          (
+            acc: string[],
+            curr: { status: { id: number; description: string } }
+          ) => {
+            acc.push(curr.status.description);
+            return acc;
+          },
+          []
+        )
+        .filter((res: string) => res != "Accepted");
+      // console.log("Results : ", results);
+
+      setCodeStatus(
+        results && results.length > 0
+          ? getMostRepeatingElement(results)
+          : "Accepted"
       );
-      // console.log(wrong.length);
-      if (wrong.length == 0) {
-        setCodeStatus("Accepted");
-      } else {
-        setCodeStatus("Wrong Answer");
-      }
+
+      // const wrong = response.data.data.allStatuses.filter(
+      //   (obj: { status: { id: number; description: string } }) => {
+      //     // console.log(obj.status.id);
+      //     return obj.status.id !== 3;
+      //   }
+      // );
+      // // console.log(wrong.length);
+      // if (wrong.length == 0) {
+      //   setCodeStatus("Accepted");
+      // } else {
+      //   setCodeStatus("Wrong Answer");
+      // }
       setLoading(false);
     }
   };
