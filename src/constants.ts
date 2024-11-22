@@ -43,4 +43,12 @@ export const BOILERPLATES: BOILERPLATE[] = [
       `import sys\ninput = sys.stdin.read().strip()\narr = list(map(int, input.split(" ")))\n\narr.pop(0)\n\ndef findSecondLargest(array):\n    # type your code here\n    pass\n\nprint(findSecondLargest(arr))`,
     ],
   },
+  {
+    problem_id: 6,
+    langs: [
+      `#include<bits/stdc++.h>\nusing namespace std;\nint longestIncreasingSubsequence(vector<int>&arr){\n    //type your code here\n}\nint main(){\n    int n;\n    cin>>n;\n    vector<int>arr;\n    for(int i=0; i<n; i++){\n        int a;\n        cin>>a;\n        arr.push_back(a);\n    }\n    cout<<longestIncreasingSubsequence(arr);\n}`,
+      `const input=require('fs').readFileSync('/dev/stdin').toString().trim();\nconst arr=input.split(" ").map(Number);arr.shift();\nfunction longestIncreasingSubsequence(array){\n    //type your code here\n}\nconsole.log(longestIncreasingSubsequence(arr));`,
+      `import sys\ninput = sys.stdin.read().strip()\narr = list(map(int, input.split(" ")))\n\narr.pop(0)\n\ndef longestIncreasingSubsequence(array):\n    # type your code here\n    pass\n\nprint(longestIncreasingSubsequence(arr))`,
+    ],
+  },
 ];

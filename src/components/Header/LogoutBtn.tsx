@@ -33,10 +33,10 @@ export default function LogoutBtn() {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger className="hover:scale-105 transition duration-150">
         <img src={logoutIcon} className="h-[43px]" />
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-[#FFC100] border border-[#FFC100]">
+      <AlertDialogContent className="bg-[#FFC100] border border-[#FFC100] font-display">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-2xl">
             Are you sure?
@@ -45,7 +45,7 @@ export default function LogoutBtn() {
             You will be logged out from the app.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="font-display">
           <AlertDialogCancel className="bg-gray-200 hover:bg-gray-100">
             No
           </AlertDialogCancel>

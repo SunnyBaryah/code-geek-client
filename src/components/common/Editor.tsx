@@ -215,7 +215,7 @@ export default function MonacoEditor(props: EditorProps) {
                     className=" text-white hover:scale-100 "
                     onClick={handleRun}
                   >
-                    Run
+                    <>Run</>
                   </Button>
                   <img className="h-[20px]" src={runIcon} />
                 </div>
@@ -224,7 +224,7 @@ export default function MonacoEditor(props: EditorProps) {
                     className=" text-white hover:scale-100 "
                     onClick={handleSubmit}
                   >
-                    Submit
+                    <>Submit</>
                   </Button>
                   <img className="h-[20px]" src={submitIcon} />
                 </div>
@@ -238,7 +238,7 @@ export default function MonacoEditor(props: EditorProps) {
               {langCode === 54 ? "C++" : langCode === 63 ? "JS" : "Python"}
               <img className="w-[25px]" src={DownwardIcon} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-700 text-white">
+            <DropdownMenuContent className="bg-gray-700 text-white font-display">
               <DropdownMenuLabel>Language</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem

@@ -33,11 +33,11 @@ export default function Home() {
           </div>
           <div className="flex flex-col xl:flex-row justify-center xl:justify-between items-center gap-8 md:gap-12 xl:gap-20 w-[95%] xl:w-[90%] 2xl:w-[80%] mx-auto">
             <div className="w-[95%] xl:w-[70%] flex flex-col justify-between items-center gap-10">
-              <h2 className="text-4xl text-center md:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight">
-                <span className="">Master Coding</span>
-                <span className=" text-[#FFC100]">, </span>
-                <span className="">One Challenge at a Time</span>
-                <span className=" text-[#FFC100]">.</span>
+              <h2 className="text-4xl text-center md:text-5xl xl:text-6xl font-bold ">
+                <span className="leading-tight">Master Coding</span>
+                <span className="leading-tight text-[#FFC100]">, </span>
+                <span className="leading-tight">One Challenge at a Time</span>
+                <span className="leading-tight text-[#FFC100]">.</span>
               </h2>
               {isLoggedIn === false && (
                 <div className="w-full flex justify-center">
@@ -109,7 +109,7 @@ export default function Home() {
               }}
               className="bg-[#FFC100] w-[50%] mx-auto py-2 text-gray-800 rounded-md"
             >
-              Explore Problems
+              <>Explore Problems</>
             </Button>
           </div>
         )}

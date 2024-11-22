@@ -7,24 +7,26 @@ import Input from "../common/Input.tsx";
 import Button from "../common/Button.tsx";
 import authService from "../../services/auth.ts";
 import { toast } from "react-toastify";
+import loadingIcon from "/loading-2-icon.svg";
 interface LoginForm {
   email: string;
   password: string;
 }
-export default function Login(){
+export default function Login() {
   const dispatch = useDispatch();
   const [error, setError] = useState<string>("");
   const { register, handleSubmit } = useForm<LoginForm>();
-
-  const login:SubmitHandler<LoginForm> = async (data) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const login: SubmitHandler<LoginForm> = async (data) => {
     setError("");
+    setLoading(true);
     try {
       const session = await authService.login(data);
       console.log(session);
       if (session && session.status === 200) {
         const userData = await authService.getCurrentUser();
         // console.log("User Data : ", userData);
-        if(userData){
+        if (userData) {
           const serializableUserData = {
             id: userData.data.data._id,
             email: userData.data.data.email,
@@ -33,12 +35,26 @@ export default function Login(){
           // console.log("Data : ", serializableUserData);
           dispatch(authLogin(serializableUserData));
           toast.success("Logged in successfully", { position: "bottom-right" });
-          
         }
       }
-    } catch (error:any) {
-      setError(error.message);
+    } catch (error: any) {
+      console.log(error);
+      switch (error.response.status) {
+        case 401:
+          setError("Incorrect Password");
+          break;
+        case 404:
+          setError("User does not exist");
+          break;
+        case 400:
+          setError("Email is required");
+          break;
+        default:
+          setError(error.message);
+      }
+      // setError(error.message);
     }
+    setLoading(false);
   };
   return (
     <div className="h-[80vh] flex items-center justify-center w-full ">
@@ -81,8 +97,18 @@ export default function Login(){
                 required: true,
               })}
             />
-            <Button type="submit" className="w-full bg-[#FFC100] py-2 rounded-md text-gray-800">
-              Sign in
+
+            <Button
+              disabled={loading}
+              type="submit"
+              className="w-full bg-[#FFC100] py-2 rounded-md text-gray-800 flex justify-center items-center gap-5"
+            >
+              <>
+                Sign in
+                {loading && (
+                  <img src={loadingIcon} className="h-[35px] animate-spin" />
+                )}
+              </>
             </Button>
           </div>
         </form>

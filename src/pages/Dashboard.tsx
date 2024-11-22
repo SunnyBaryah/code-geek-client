@@ -7,6 +7,9 @@ import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RootState } from "../store/store";
+import problemService from "@/services/problem";
+import { useDispatch } from "react-redux";
+import { setProblems } from "@/store/problemsSlice";
 
 interface SolvedQuestions {
   problem_id: number;
@@ -14,12 +17,36 @@ interface SolvedQuestions {
   difficulty: string;
 }
 export default function Dashboard() {
+  const dispatch = useDispatch();
   const [solvedQuestions, setSolvedQuestions] = useState<SolvedQuestions[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [progressLoading, setProgressLoading] = useState<boolean>(true);
+  const [problemCount, setProblemCount] = useState<number>(0);
+  const stateData = useSelector((state: RootState) => state.problems.problems);
   const userData: { username: string; email: string } = useSelector(
     (state: RootState) => state.auth.userData
   ) || { username: "", email: "" };
   // console.log(userData);
+
+  useEffect(() => {
+    const problemsFetcher = async () => {
+      setProgressLoading(true);
+      let data;
+      if (stateData.length > 0) {
+        // console.log("State Data : ", stateData);
+        data = stateData;
+        setProblemCount(data.length);
+      } else {
+        data = await problemService.getAllProblems();
+        dispatch(setProblems(data.data.data.foundProblem));
+        setProblemCount(data.data.data.foundProblem.length);
+      }
+      //   console.log(allProblems);
+      setProgressLoading(false);
+    };
+    problemsFetcher();
+  }, []);
+
   useEffect(() => {
     const getSolvedQuestions = async () => {
       const response = await authService.getSolvedProblems();
@@ -46,7 +73,7 @@ export default function Dashboard() {
       </div>
       <div className="mb-4 w-full lg:w-[59%] flex flex-col gap-12 xl:gap-16 2xl:gap-20 bg-gray-800 py-4 row-span-1 rounded-md">
         <h1 className="text-center font-semibold text-3xl">Current Progress</h1>
-        {loading ? (
+        {progressLoading ? (
           <div className="w-full flex flex-col gap-6 justify-center items-center">
             <Skeleton className="bg-gray-700 w-[80%] h-[20px]" />
             <Skeleton className="bg-gray-700 w-[80%] h-[20px]" />
@@ -58,13 +85,13 @@ export default function Dashboard() {
                 className=""
                 value={
                   solvedQuestions && solvedQuestions.length > 0
-                    ? (solvedQuestions.length / 5) * 100
+                    ? (solvedQuestions.length / problemCount) * 100
                     : 0
                 }
               />
               <p className="text-gray-300">
                 {solvedQuestions && solvedQuestions.length > 0
-                  ? Math.floor((solvedQuestions.length / 5) * 100)
+                  ? Math.floor((solvedQuestions.length / problemCount) * 100)
                   : 0}
                 %
               </p>
@@ -75,7 +102,7 @@ export default function Dashboard() {
                 {solvedQuestions && solvedQuestions.length > 0
                   ? solvedQuestions.length
                   : 0}{" "}
-                out of 5 DSA problems solved
+                out of {problemCount} DSA problems solved
               </p>
             </div>
           </div>
