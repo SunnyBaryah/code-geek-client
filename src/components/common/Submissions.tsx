@@ -49,7 +49,7 @@ export default function Submissions() {
       // console.log(submissions);
     };
     fetchSubmissions();
-  }, [prob_id]);
+  }, [prob_id, dispatch, stateData]);
   return loading === true ? (
     <div className="flex flex-col justify-center items-center gap-4 my-2">
       <Skeleton className="bg-gray-700 w-[90%] h-[35px]" />

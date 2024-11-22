@@ -89,46 +89,65 @@ export default function MonacoEditor(props: EditorProps) {
       setLoading(true);
       const code = monacoEditorRef.current.getValue();
       const test_cases = props.test_cases;
+
       // console.log(test_cases);
-      const response = await problemService.runTheCode({
-        code,
-        language_id: langCode,
-        test_cases,
-      });
-      // console.log("All statuses : ", response.data.data.allStatuses);
-      const results: string[] = response.data.data.allStatuses
-        .reduce(
-          (
-            acc: string[],
-            curr: { status: { id: number; description: string } }
-          ) => {
-            acc.push(curr.status.description);
-            return acc;
-          },
-          []
-        )
-        .filter((res: string) => res != "Accepted");
-      // console.log("Results : ", results);
+      try {
+        const response = await problemService.runTheCode({
+          code,
+          language_id: langCode,
+          test_cases,
+        });
 
-      setCodeStatus(
-        results && results.length > 0
-          ? getMostRepeatingElement(results)
-          : "Accepted"
-      );
+        // console.log("All statuses : ", response.data.data.allStatuses);
+        const results: string[] = response.data.data.allStatuses
+          .reduce(
+            (
+              acc: string[],
+              curr: { status: { id: number; description: string } }
+            ) => {
+              acc.push(curr.status.description);
+              return acc;
+            },
+            []
+          )
+          .filter((res: string) => res != "Accepted");
+        // console.log("Results : ", results);
 
-      // const wrong = response.data.data.allStatuses.filter(
-      //   (obj: { status: { id: number; description: string } }) => {
-      //     // console.log(obj.status.id);
-      //     return obj.status.id !== 3;
-      //   }
-      // );
-      // // console.log(wrong.length);
-      // if (wrong.length == 0) {
-      //   setCodeStatus("Accepted");
-      // } else {
-      //   setCodeStatus("Wrong Answer");
-      // }
-      setLoading(false);
+        setCodeStatus(
+          results && results.length > 0
+            ? getMostRepeatingElement(results)
+            : "Accepted"
+        );
+
+        // const wrong = response.data.data.allStatuses.filter(
+        //   (obj: { status: { id: number; description: string } }) => {
+        //     // console.log(obj.status.id);
+        //     return obj.status.id !== 3;
+        //   }
+        // );
+        // // console.log(wrong.length);
+        // if (wrong.length == 0) {
+        //   setCodeStatus("Accepted");
+        // } else {
+        //   setCodeStatus("Wrong Answer");
+        // }
+        setLoading(false);
+      } catch (error: any) {
+        setLoading(false);
+        if (error.status) {
+          toast.error(
+            "Error: " +
+              error.status +
+              ", Server not able to run code now, please try after some time",
+            { position: "bottom-center" }
+          );
+        } else {
+          toast.error(
+            "Server not able to run code now, please try after some time",
+            { position: "bottom-center" }
+          );
+        }
+      }
     }
   };
 
@@ -139,51 +158,68 @@ export default function MonacoEditor(props: EditorProps) {
 
       const code = monacoEditorRef.current.getValue();
       const test_cases = props.test_cases;
-      const response = await problemService.runTheCode({
-        code,
-        language_id: langCode,
-        test_cases,
-      });
-      // console.log(response.data.data.allStatuses);
-      const wrong = response.data.data.allStatuses.filter(
-        (obj: { status: { id: number; description: string } }) => {
-          // console.log(obj.status.id);
-          return obj.status.id !== 3;
-        }
-      );
-      // console.log(test_cases);
-      // console.log(response.data.data.allStatuses);
-      // console.log(wrong.length);
-      let finalStatus = "";
-      if (wrong.length == 0) {
-        finalStatus = "Accepted";
-        const response = await authService.addSolvedProblem({
-          problem_id: probId,
-          difficulty: props.difficulty,
-          problem_title: props.problem_title,
+
+      try {
+        const response = await problemService.runTheCode({
+          code,
+          language_id: langCode,
+          test_cases,
         });
-        console.log(response);
-      } else {
-        finalStatus = "Wrong Answer";
+        // console.log(response.data.data.allStatuses);
+        const wrong = response.data.data.allStatuses.filter(
+          (obj: { status: { id: number; description: string } }) => {
+            // console.log(obj.status.id);
+            return obj.status.id !== 3;
+          }
+        );
+        // console.log(test_cases);
+        // console.log(response.data.data.allStatuses);
+        // console.log(wrong.length);
+        let finalStatus = "";
+        if (wrong.length == 0) {
+          finalStatus = "Accepted";
+          const response = await authService.addSolvedProblem({
+            problem_id: probId,
+            difficulty: props.difficulty,
+            problem_title: props.problem_title,
+          });
+          console.log(response);
+        } else {
+          finalStatus = "Wrong Answer";
+        }
+        // console.log("Final Status :", finalStatus);
+        const submitResponse = await submissionService.postSubmission({
+          problem_id: probId,
+          code,
+          status: finalStatus,
+        });
+        console.log(submitResponse);
+        setLoading(false);
+        toast.success(`Code submitted, result : ${finalStatus}`, {
+          position: "bottom-right",
+        });
+      } catch (error: any) {
+        setLoading(false);
+        if (error.status) {
+          toast.error(
+            "Error: " +
+              error.status +
+              ", Server not able to run code now, please try after some time",
+            { position: "bottom-center" }
+          );
+        } else {
+          toast.error(
+            "Server not able to run code now, please try after some time",
+            { position: "bottom-center" }
+          );
+        }
       }
-      // console.log("Final Status :", finalStatus);
-      const submitResponse = await submissionService.postSubmission({
-        problem_id: probId,
-        code,
-        status: finalStatus,
-      });
-      console.log(submitResponse);
-      setLoading(false);
-      toast.success(`Code submitted, result : ${finalStatus}`, {
-        position: "bottom-right",
-      });
     }
   };
   return (
     <div className={`mt-2  ${props.className}`}>
       <div className="w-full py-1 mb-2 flex justify-between items-center">
         <motion.button
-          onClick={handleRun}
           initial={{ width: "163px" }}
           animate={{
             width: loading ? "140px" : "163px", // Expand on running
@@ -212,21 +248,25 @@ export default function MonacoEditor(props: EditorProps) {
               <div className="flex">
                 <div className="flex items-center justify-center gap-2 border-r border-r-gray-700 bg-gray-600 hover:bg-gray-700 transition duration-150 rounded-l-md px-2 py-1">
                   <Button
-                    className=" text-white hover:scale-100 "
+                    className=" text-white hover:scale-100 flex justify-center items-center gap-2"
                     onClick={handleRun}
                   >
-                    <>Run</>
+                    <>
+                      Run
+                      <img className="h-[20px]" src={runIcon} />
+                    </>
                   </Button>
-                  <img className="h-[20px]" src={runIcon} />
                 </div>
                 <div className="flex items-center gap-2 justify-center border-l border-l-gray-700 bg-gray-600 hover:bg-gray-700 transition duration-150 rounded-r-md pl-2 pr-1">
                   <Button
-                    className=" text-white hover:scale-100 "
+                    className=" text-white hover:scale-100 flex justify-center items-center gap-2 "
                     onClick={handleSubmit}
                   >
-                    <>Submit</>
+                    <>
+                      Submit
+                      <img className="h-[20px]" src={submitIcon} />
+                    </>
                   </Button>
-                  <img className="h-[20px]" src={submitIcon} />
                 </div>
               </div>
             </motion.div>

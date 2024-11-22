@@ -45,7 +45,7 @@ export default function Dashboard() {
       setProgressLoading(false);
     };
     problemsFetcher();
-  }, []);
+  }, [dispatch, stateData]);
 
   useEffect(() => {
     const getSolvedQuestions = async () => {
