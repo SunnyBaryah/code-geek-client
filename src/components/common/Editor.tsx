@@ -330,7 +330,7 @@ export default function MonacoEditor(props: EditorProps) {
         </div>
       </div>
       <div className="w-full bg-gray-800 text-white mr-2 rounded-md pt-1 pb-2 px-4 mt-2 max-h-40 overflow-auto">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {loading == true ? (
             <motion.div
               key="loadingState"
