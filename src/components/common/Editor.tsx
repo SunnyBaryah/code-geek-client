@@ -59,8 +59,10 @@ export default function MonacoEditor(props: EditorProps) {
 
   useEffect(() => {
     setInput(props.test_cases[0].input);
-    const unhiddenCases=props.test_cases.filter((ele)=>ele.isHidden===false);
-    const exOutputs=unhiddenCases.map((ele)=>ele.expected_output);
+    const unhiddenCases = props.test_cases.filter(
+      (ele) => ele.isHidden === false
+    );
+    const exOutputs = unhiddenCases.map((ele) => ele.expected_output);
     setExpectedOutputs(exOutputs);
     setExpectedOutput(exOutputs[0]);
   }, [props.test_cases]);
@@ -109,15 +111,18 @@ export default function MonacoEditor(props: EditorProps) {
           test_cases,
         });
 
-        console.log("All statuses : ", response.data.data.allStatuses);
+        // console.log("All statuses : ", response.data.data.allStatuses);
 
-        const stdouts: string[] = response.data.data.allStatuses.map(
-          (ele: { stdout: string }) => ele.stdout
-        ).filter((op:string)=>op!==null);
-        console.log("Outputs : ", stdouts);
+        const stdouts: string[] = response.data.data.allStatuses
+          .map((ele: { stdout: string }) =>
+            ele.stdout !== null ? atob(ele.stdout) : null
+          )
+          .filter((op: string) => op !== null);
+        // console.log("Outputs : ", stdouts);
 
         const stderr: string[] = response.data.data.allStatuses.map(
-          (ele: { stderr: string }) => ele.stderr
+          (ele: { stderr: string }) =>
+            ele.stderr !== null ? atob(ele.stderr) : null
         );
 
         const foundErrors = stderr.filter((op) => op !== null);
@@ -125,9 +130,19 @@ export default function MonacoEditor(props: EditorProps) {
           setOutputs([]);
           setErr(stderr[0]);
         } else {
-          setOutputs(stdouts);
-          setOutput(stdouts[selectedIndex]);
-          setErr("");
+          const compilation_errors = response.data.data.allStatuses
+            .map((ele: { compile_output: string }) =>
+              ele.compile_output !== null ? atob(ele.compile_output) : null
+            )
+            .filter((op: string) => op !== null);
+          if (compilation_errors.length > 0) {
+            setOutputs([]);
+            setErr(compilation_errors[0]);
+          } else {
+            setOutputs(stdouts);
+            setOutput(stdouts[selectedIndex]);
+            setErr("");
+          }
         }
 
         const results: string[] = response.data.data.allStatuses
@@ -398,10 +413,12 @@ export default function MonacoEditor(props: EditorProps) {
               {err !== "" ? (
                 <div className="flex flex-col gap-2 justify-center items-start">
                   <h1 className="text-xl font-semibold w-full">Error :</h1>
-                  <h2 className="w-full bg-red-700 rounded-lg px-3 py-2 text-red-300">{err}</h2>
+                  <h2 className="w-full bg-red-700 rounded-lg px-3 py-2 text-red-300">
+                    {err}
+                  </h2>
                 </div>
               ) : (
-                <div> 
+                <div>
                   <div className="flex gap-3 mb-5">
                     {props.test_cases &&
                       props.test_cases.map((test_case, index) => {
