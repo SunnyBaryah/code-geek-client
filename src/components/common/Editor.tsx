@@ -157,22 +157,22 @@ export default function MonacoEditor(props: EditorProps) {
       let finalStatus = "";
       if (wrong.length == 0) {
         finalStatus = "Accepted";
-        const response = await authService.addSolvedProblem({
+        await authService.addSolvedProblem({
           problem_id: probId,
           difficulty: props.difficulty,
           problem_title: props.problem_title,
         });
-        console.log(response);
+        // console.log(response);
       } else {
         finalStatus = "Wrong Answer";
       }
       // console.log("Final Status :", finalStatus);
-      const submitResponse = await submissionService.postSubmission({
+      await submissionService.postSubmission({
         problem_id: probId,
         code,
         status: finalStatus,
       });
-      console.log(submitResponse);
+      // console.log(submitResponse);
       setLoading(false);
       toast.success(`Code submitted, result : ${finalStatus}`, {
         position: "bottom-right",

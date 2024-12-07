@@ -22,7 +22,7 @@ export default function Login() {
     setLoading(true);
     try {
       const session = await authService.login(data);
-      console.log(session);
+      // console.log(session);
       if (session && session.status === 200) {
         const userData = await authService.getCurrentUser();
         // console.log("User Data : ", userData);
@@ -38,7 +38,7 @@ export default function Login() {
         }
       }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       switch (error.response.status) {
         case 401:
           setError("Incorrect Password");

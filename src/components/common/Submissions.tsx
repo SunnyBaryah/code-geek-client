@@ -32,7 +32,7 @@ export default function Submissions() {
     const fetchSubmissions = async () => {
       let dataToDisplay;
       if (stateData.length > 0) {
-        console.log("State Data : ", stateData);
+        // console.log("State Data : ", stateData);
         dataToDisplay = stateData;
         setData(dataToDisplay);
       } else {
