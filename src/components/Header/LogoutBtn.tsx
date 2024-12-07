@@ -29,7 +29,7 @@ export default function LogoutBtn() {
       }
     } catch (e) {
       toast.error(`Error while logging out : ${e}`, { position: "bottom-right" });
-      // console.log("Error while logout process : ", e);
+      console.log("Error while logout process : ", e);
     }
   };
   return (
