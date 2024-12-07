@@ -28,7 +28,7 @@ export default function ProblemsPage() {
       setLoading(false);
     };
     problemsFetcher();
-  }, []);
+  }, [dispatch, stateData]);
 
   return (
     <div>

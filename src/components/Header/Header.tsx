@@ -40,7 +40,7 @@ export default function Header() {
               item.active ? (
                 <div key={item.name} onClick={() => navigate(item.slug)}>
                   <Button className={`${item.class} px-3 py-1 rounded-md`}>
-                    {item.name}
+                    <>{item.name}</>
                   </Button>
                 </div>
               ) : null
