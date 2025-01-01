@@ -8,6 +8,7 @@ import Button from "../common/Button.tsx";
 import authService from "../../services/auth.ts";
 import { toast } from "react-toastify";
 import loadingIcon from "/loading-2-icon.svg";
+import { motion } from "framer-motion";
 interface LoginForm {
   email: string;
   password: string;
@@ -57,7 +58,12 @@ export default function Login() {
     setLoading(false);
   };
   return (
-    <div className="h-[80vh] flex items-center justify-center w-full ">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      className="h-[80vh] flex items-center justify-center w-full "
+    >
       <div
         className={`mx-3 lg:mx-auto w-full max-w-lg bg-gray-700 rounded-xl p-10 `}
       >
@@ -113,6 +119,6 @@ export default function Login() {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }

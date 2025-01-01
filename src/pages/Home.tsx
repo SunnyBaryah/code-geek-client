@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Button from "./../components/common/Button";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../store/store";
+import { motion } from "framer-motion";
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const status = useSelector((state: RootState) => state.auth.status);
@@ -21,7 +22,11 @@ export default function Home() {
   }, [status]);
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+    >
       <div className="w-[80%] mx-auto text-white py-20">
         <div className="min-h-screen">
           <div className="mb-28 xl:mb-32 flex justify-center items-center gap-4">
@@ -125,6 +130,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -8,6 +8,7 @@ import { RootState } from "@/store/store.ts";
 import { toast } from "react-toastify";
 import { setSubmissions } from "@/store/submissionsSlice.ts";
 import { Skeleton } from "../ui/skeleton.tsx";
+import { AnimatePresence, motion } from "framer-motion";
 export default function Submissions() {
   const prob_id: number = Number(useParams().problemId);
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,41 +51,60 @@ export default function Submissions() {
     };
     fetchSubmissions();
   }, [prob_id, dispatch, stateData]);
-  return loading === true ? (
-    <div className="flex flex-col justify-center items-center gap-4 my-2">
-      <Skeleton className="bg-gray-700 w-[90%] h-[35px]" />
-      <Skeleton className="bg-gray-700 w-[90%] h-[35px]" />
-    </div>
-  ) : data && data.length > 0 ? (
-    <div className="flex flex-col w-full border-t-2 border-gray-900 max-h-[50vh] lg:max-h-[77vh] overflow-auto">
-      <div className="flex justify-between w-full px-4 py-2 border-b border-gray-600">
-        <h1 className="font-bold">Status</h1>
-        <h3 className="font-bold">Submit Date</h3>
-      </div>
-      {data.map((submission: Submission, index: number) => {
-        // console.log(submission);
-        return (
-          <div
-            key={index}
-            className="flex justify-between w-full px-4 py-4 border-b border-gray-600"
-          >
-            <h1
-              className={`${
-                submission.status === "Wrong Answer"
-                  ? "text-red-600"
-                  : "text-green-600"
-              } font-semibold`}
-            >
-              {submission.status}
-            </h1>
-            <h3>{formatDate(submission.createdAt)}</h3>
+  return (
+    <AnimatePresence>
+      {loading === true ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 100 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col justify-center items-center gap-4 my-2"
+        >
+          <Skeleton className="bg-gray-700 w-[90%] h-[35px]" />
+          <Skeleton className="bg-gray-700 w-[90%] h-[35px]" />
+        </motion.div>
+      ) : data && data.length > 0 ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 100 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col w-full border-t-2 border-gray-900 max-h-[50vh] lg:max-h-[77vh] overflow-auto"
+        >
+          <div className="flex justify-between w-full px-4 py-2 border-b border-gray-600">
+            <h1 className="font-bold">Status</h1>
+            <h3 className="font-bold">Submit Date</h3>
           </div>
-        );
-      })}
-    </div>
-  ) : (
-    <div className="flex justify-center py-4">
-      <h1 className="text-2xl">No Submissions!</h1>
-    </div>
+          {data.map((submission: Submission, index: number) => {
+            // console.log(submission);
+            return (
+              <div
+                key={index}
+                className="flex justify-between w-full px-4 py-4 border-b border-gray-600"
+              >
+                <h1
+                  className={`${
+                    submission.status === "Wrong Answer"
+                      ? "text-red-600"
+                      : "text-green-600"
+                  } font-semibold`}
+                >
+                  {submission.status}
+                </h1>
+                <h3>{formatDate(submission.createdAt)}</h3>
+              </div>
+            );
+          })}
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 100 }}
+          exit={{ opacity: 0 }}
+          className="flex justify-center py-4"
+        >
+          <h1 className="text-2xl">No Submissions!</h1>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

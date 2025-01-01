@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Input from "../common/Input.tsx";
 import Button from "../common/Button.tsx";
 import loadingIcon from "/loading-2-icon.svg";
+import { motion } from "framer-motion";
 interface RegisterForm {
   email: string;
   password: string;
@@ -52,7 +53,12 @@ export default function SignUp() {
     setLoading(false);
   };
   return (
-    <div className="h-[80vh] flex items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      className="h-[80vh] flex items-center justify-center"
+    >
       <div
         className={`mx-4 lg:mx-auto w-full max-w-lg bg-gray-700 rounded-xl p-10 `}
       >
@@ -109,6 +115,6 @@ export default function SignUp() {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }

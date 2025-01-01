@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { setProblems } from "@/store/problemsSlice";
+import { motion } from "framer-motion";
 export default function ProblemsPage() {
   const [allProblems, setAllProblems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,11 @@ export default function ProblemsPage() {
   }, [dispatch, stateData]);
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+    >
       <h1 className="text-center my-4 text-white text-4xl font-semibold">
         DSA Problems
       </h1>
@@ -65,6 +70,6 @@ export default function ProblemsPage() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

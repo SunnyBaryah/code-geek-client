@@ -10,6 +10,7 @@ import { RootState } from "../store/store";
 import problemService from "@/services/problem";
 import { useDispatch } from "react-redux";
 import { setProblems } from "@/store/problemsSlice";
+import { motion } from "framer-motion";
 
 interface SolvedQuestions {
   problem_id: number;
@@ -56,7 +57,12 @@ export default function Dashboard() {
     getSolvedQuestions();
   }, []);
   return (
-    <div className="text-white py-4 mx-auto w-[95%] xl:w-[80%] flex flex-wrap justify-between xl:gap-2">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      className="text-white py-4 mx-auto w-[95%] xl:w-[80%] flex flex-wrap justify-between xl:gap-2"
+    >
       <div className="mb-4 w-full lg:w-[40%] px-2 col-span-1 bg-gray-800 row-span-1 rounded-md">
         <div className="text-center py-3">
           <h1 className="font-semibold text-3xl">User Details</h1>
@@ -145,6 +151,6 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

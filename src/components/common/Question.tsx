@@ -1,4 +1,5 @@
 import { QuestionData } from "../../interfaces/QuestionData";
+import { motion } from "framer-motion";
 export default function Question(props: { question: QuestionData }) {
   const getDifficultyClass = (difficulty: string) => {
     switch (difficulty) {
@@ -11,7 +12,12 @@ export default function Question(props: { question: QuestionData }) {
     }
   };
   return (
-    <div className="h-full text-white border-t-2 border-gray-900 px-4 py-3 max-h-[80vh] overflow-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      className="h-full text-white border-t-2 border-gray-900 px-4 py-3 max-h-[80vh] overflow-auto"
+    >
       <h1 className="font-semibold text-2xl text-gray-200 mb-3">{`${props.question.id}. ${props.question.title} `}</h1>
       <p
         className={`${getDifficultyClass(
@@ -41,6 +47,6 @@ export default function Question(props: { question: QuestionData }) {
           </div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

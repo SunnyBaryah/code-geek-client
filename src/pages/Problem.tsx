@@ -10,6 +10,7 @@ import { QuestionData } from "../interfaces/QuestionData.ts";
 import Submissions from "../components/common/Submissions.tsx";
 import { useDispatch } from "react-redux";
 import { clearSubmissions } from "@/store/submissionsSlice.ts";
+import { motion } from "framer-motion";
 export default function ProblemPage() {
   const [problem, setProblem] = useState<Problem | undefined>(undefined);
   const [question, setQuestion] = useState<QuestionData | undefined>(undefined);
@@ -47,7 +48,12 @@ export default function ProblemPage() {
   }, [problem]);
 
   return (
-    <div className="w-[95%] xl:w-[80%] mx-auto flex flex-wrap justify-between">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      className="w-[95%] xl:w-[80%] mx-auto flex flex-wrap justify-between"
+    >
       <div className="w-full lg:w-[34%] xl:w-[34%] 2xl:w-[34%] bg-gray-800 rounded-md mt-2 text-white">
         <div className="flex gap-2 items-center py-2 px-3">
           <button
@@ -87,6 +93,6 @@ export default function ProblemPage() {
           />
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
