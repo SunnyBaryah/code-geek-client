@@ -9,9 +9,16 @@ import runIcon from "/play-icon.svg";
 import submitIcon from "/submit-icon.svg";
 import DownwardIcon from "/angle-down.svg";
 import codeIcon from "/code-web-icon.svg";
+import loadingIcon from "/loading-2-icon.svg";
+import micOpenIcon from "/mic-open-icon.svg";
+import micOffIcon from "/mic-off-icon.svg";
+import clearIcon from "/clear-icon.svg";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import { BOILERPLATES } from "@/constants.ts";
 import { BOILERPLATE } from "@/constants.ts";
 import { OnMount } from "@monaco-editor/react";
@@ -24,6 +31,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet.tsx";
+import aiService from "@/services/ai.ts";
 export default function MonacoEditor(props: EditorProps) {
   const monacoEditorRef = useRef<monacoEditor.IStandaloneCodeEditor | null>(
     null
@@ -39,6 +55,13 @@ export default function MonacoEditor(props: EditorProps) {
   const [codeStatus, setCodeStatus] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [langCode, setLangCode] = useState<number>(54);
+  const [visiblePrompt, setVisiblePrompt] = useState<string>("Select Question");
+  const [prompt, setPrompt] = useState<string>();
+  const [aiResponding, setAiResponding] = useState<boolean>(false);
+  const [aiResponse, setAiResponse] = useState<string | null>();
+  const [queFormat, setQueFormat] = useState<number>(0);
+  const [micOpen, setMicOpen] = useState<boolean>(false);
+
   const probId: number = Number(useParams().problemId);
   const problemCodesObject: BOILERPLATE = BOILERPLATES.find(
     (entry) => entry.problem_id === probId
@@ -262,6 +285,56 @@ export default function MonacoEditor(props: EditorProps) {
       }
     }
   };
+
+  const changeAiQueFormat = (val: number) => {
+    setQueFormat(val);
+  };
+
+  const startListening = () =>
+    SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
+
+  const handleMic = () => {
+    if (!micOpen) {
+      startListening();
+    } else if (micOpen) {
+      SpeechRecognition.stopListening();
+      if (monacoEditorRef.current) {
+        const code = monacoEditorRef.current.getValue();
+        setPrompt(
+          transcript +
+            ". Question : " +
+            props.problem_description +
+            ". Code : " +
+            code
+        );
+      } else {
+        setPrompt(transcript + ". Question : " + props.problem_description);
+      }
+    }
+    console.log("Voice prompt : ", prompt);
+    setMicOpen(!micOpen);
+  };
+
+  const getResponseFromAI = async () => {
+    // console.log(prompt);
+    if (prompt) {
+      setAiResponse(null);
+      setAiResponding(true);
+      const response = await aiService.getResponse({ prompt });
+      if (response) {
+        setAiResponse(response.data.data.response);
+      } else {
+        setAiResponse(
+          "Sorry, currently the assistant is not working. Please try again after some time."
+        );
+      }
+      setAiResponding(false);
+    } else {
+      setAiResponse("Select a question first");
+    }
+  };
   return (
     <div className={`mt-2  ${props.className}`}>
       <div className="w-full py-1 mb-2 flex justify-between items-center">
@@ -318,7 +391,218 @@ export default function MonacoEditor(props: EditorProps) {
             </motion.div>
           )}
         </motion.button>
-        <div className="text-white">
+        <div className="text-white flex gap-1 md:gap-5 ">
+          <Sheet>
+            <SheetTrigger className="bg-[#FFC100] px-4 rounded-md hover:bg-gray-600 hover:text-[#FFC100] transition duration-200 text-xs sm:text-base text-black">
+              Geeky AI
+            </SheetTrigger>
+            <SheetContent className="bg-gray-200 border border-gray-600">
+              <SheetHeader>
+                <SheetTitle>Ask Geeky AI</SheetTitle>
+                <div className="flex justify-between w-full">
+                  {["Questions", "Use Voice"].map((txt, index) => (
+                    <button
+                      key={index}
+                      className={`w-[48%] py-1 px-2 rounded-md transition duration-200 ${
+                        queFormat === index
+                          ? "bg-[#FFC100] text-gray-800"
+                          : "bg-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white"
+                      }`}
+                      onClick={() => changeAiQueFormat(index)}
+                    >
+                      {`${txt}`}
+                    </button>
+                  ))}
+                </div>
+                {queFormat == 0 && (
+                  <SheetDescription>
+                    <div className="flex justify-between gap-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className="flex justify-center items-center gap-2 bg-gray-600 hover:bg-gray-500 transition duration-200 text-white px-2 py-1 rounded-md text-left">
+                          {visiblePrompt}
+                          <img className="w-[25px]" src={DownwardIcon} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-gray-600 text-white font-display">
+                          <DropdownMenuLabel>Choose Command</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              if (monacoEditorRef.current) {
+                                const code = monacoEditorRef.current.getValue();
+                                const enteredPrompt =
+                                  "Review my code, here is the code : " +
+                                  String(code);
+                                setPrompt(enteredPrompt);
+                              } else {
+                                setPrompt("Review my code");
+                              }
+                              setVisiblePrompt("Review my code");
+                            }}
+                            className="hover:bg-white hover:text-gray-600"
+                          >
+                            Review my code
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const question = props.problem_description;
+                              setPrompt(
+                                "Tell best practices to follow, related to question. Question : " +
+                                  question
+                              );
+                              setVisiblePrompt(
+                                "Tell best practices to follow, related to question"
+                              );
+                            }}
+                            className="hover:bg-white hover:text-gray-600"
+                          >
+                            Tell best practices to follow, related to question
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const question = props.problem_description;
+                              setPrompt(
+                                "Give hints after seeing the question. Question : " +
+                                  question
+                              );
+                              setVisiblePrompt(
+                                "Give hints after seeing the question"
+                              );
+                            }}
+                            className="hover:bg-white hover:text-gray-600"
+                          >
+                            Give hints after seeing the question
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              if (monacoEditorRef.current) {
+                                const code = monacoEditorRef.current.getValue();
+                                const question = props.problem_description;
+                                const enteredPrompt =
+                                  "Give me hints after seeing the code and question. Question :" +
+                                  question +
+                                  ". Code : " +
+                                  code;
+                                setPrompt(enteredPrompt);
+                              } else {
+                                setPrompt(
+                                  "Give me hints after seeing the code and question"
+                                );
+                              }
+                              setVisiblePrompt(
+                                "Give me hints after seeing the code and question"
+                              );
+                            }}
+                            className="hover:bg-white hover:text-gray-600"
+                          >
+                            Give me hints after seeing the code and question
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              if (monacoEditorRef.current) {
+                                const code = monacoEditorRef.current.getValue();
+                                setPrompt(
+                                  "Give suggestions related to optimisation of code. Code : " +
+                                    code
+                                );
+                              } else {
+                                setPrompt(
+                                  "Give suggestions related to optimisation of code"
+                                );
+                              }
+                              setVisiblePrompt(
+                                "Give suggestions related to optimisation of code"
+                              );
+                            }}
+                            className="hover:bg-white hover:text-gray-600"
+                          >
+                            Give suggestions related to optimisation of code
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Button
+                        onClick={() => getResponseFromAI()}
+                        className="bg-gray-700 text-[#FFC100] px-2 rounded-md"
+                      >
+                        <>Send Request</>
+                      </Button>
+                    </div>
+                    {aiResponding && (
+                      <div className="bg-[#FFC100] w-full flex justify-center mt-2 rounded-md p-2">
+                        <img
+                          src={loadingIcon}
+                          className="h-[35px] animate-spin"
+                        />
+                      </div>
+                    )}
+                    {aiResponse && (
+                      <div className="text-gray-800 bg-[#FFC100] p-3 mt-3 rounded-lg text-lg leading-8 text-left">
+                        <p className="max-h-[80vh] overflow-auto">
+                          {aiResponse}
+                        </p>
+                      </div>
+                    )}
+                  </SheetDescription>
+                )}
+                {queFormat == 1 && browserSupportsSpeechRecognition && (
+                  <SheetDescription>
+                    <div className="bg-gray-800 rounded-md">
+                      <p className="min-h-14 p-3 max-h-24 md:max-h-36 overflow-auto text-gray-400">
+                        {transcript == "" ? "Speak Something" : transcript}
+                      </p>
+                      <div className="flex">
+                        <button
+                          onClick={resetTranscript}
+                          className="w-1/2 flex justify-center items-center bg-gray-700 hover:bg-gray-600 transition duration-200 py-1 rounded-bl-md"
+                        >
+                          <img className="w-9" src={clearIcon} />
+                        </button>
+
+                        <button
+                          onClick={handleMic}
+                          className="w-1/2 flex justify-center items-center bg-[#FFC100] hover:bg-[#ffd24a] transition duration-200 py-1 rounded-br-md"
+                        >
+                          {micOpen ? (
+                            <img className="w-8" src={micOffIcon} />
+                          ) : (
+                            <img className="w-8" src={micOpenIcon} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        if (transcript != "") {
+                          getResponseFromAI();
+                        } else {
+                          toast.error("Please say something first", {
+                            position: "bottom-center",
+                          });
+                        }
+                      }}
+                      className="bg-gray-700 text-[#FFC100] px-2 rounded-md w-full py-2 my-5"
+                    >
+                      <>Send Request</>
+                    </Button>
+                    {aiResponding && (
+                      <div className="bg-[#FFC100] w-full flex justify-center mt-2 rounded-md p-2">
+                        <img
+                          src={loadingIcon}
+                          className="h-[35px] animate-spin"
+                        />
+                      </div>
+                    )}
+                    {aiResponse && (
+                      <div className="text-gray-800 bg-[#FFC100] p-3 mt-3 rounded-lg text-lg leading-8 text-left">
+                        <p className="max-h-[50vh] md:max-h-[55vh] overflow-auto">
+                          {aiResponse}
+                        </p>
+                      </div>
+                    )}
+                  </SheetDescription>
+                )}
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
           <DropdownMenu>
             <DropdownMenuTrigger className="flex justify-center items-center gap-2 bg-gray-600 hover:bg-gray-700 transition duration-200 text-white px-2 py-1 rounded-md">
               {langCode === 54 ? "C++" : langCode === 63 ? "JS" : "Python"}

@@ -86,6 +86,7 @@ export default function ProblemPage() {
       <div className="w-full lg:w-[65%] pb-2 lg:pb-0">
         {problem && (
           <MonacoEditor
+            problem_description={problem.description}
             problem_title={problem.title}
             difficulty={problem.difficulty}
             test_cases={problem.test_cases}
