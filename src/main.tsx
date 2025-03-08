@@ -1,17 +1,23 @@
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App.tsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ProblemPage from './pages/Problem';
-import ProblemsPage from './pages/Problems.tsx';
-import { Provider } from 'react-redux';
-import store from './store/store.ts';
-import SignUp from './components/authentication/Signup.tsx';
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProblemPage from "./pages/Problem";
+import ProblemsPage from "./pages/Problems.tsx";
+import { Provider } from "react-redux";
+import store from "./store/store.ts";
+import SignUp from "./components/authentication/Signup.tsx";
 import AuthLayout from "./components/common/AuthLayout.tsx";
-import Login from './components/authentication/Login.tsx';
-import Home from './pages/Home.tsx';
-import Dashboard from './pages/Dashboard.tsx';
-import ErrorPage from './pages/ErrorPage';
+import Login from "./components/authentication/Login.tsx";
+import Home from "./pages/Home.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import ErrorPage from "./pages/ErrorPage";
+import AdminApp from "./AdminApp.tsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.tsx";
+import AdminSignIn from "./pages/Admin/AdminSignIn.tsx";
+import AdminProblems from "./pages/Admin/AdminProblems.tsx";
+import AdminUsers from "./pages/Admin/AdminUsers.tsx";
+import AdminAuthLayout from "./components/common/AdminAuthLayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,37 +26,99 @@ const router = createBrowserRouter([
     children: [
       {
         index: true, // Optional: adds a default route for "/"
-        element: <AuthLayout authentication={false}><Home /></AuthLayout>, // Change this to your desired default component
+        element: (
+          <AuthLayout authentication={false}>
+            <Home />
+          </AuthLayout>
+        ), // Change this to your desired default component
       },
       {
         path: "problems",
-        element: <AuthLayout authentication={true}><ProblemsPage /></AuthLayout>,
+        element: (
+          <AuthLayout authentication={true}>
+            <ProblemsPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "problems/:problemId",
-        element: <AuthLayout authentication={true}><ProblemPage /></AuthLayout>,
+        element: (
+          <AuthLayout authentication={true}>
+            <ProblemPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "sign-up",
-        element: <AuthLayout authentication={false}><SignUp /></AuthLayout>,
+        element: (
+          <AuthLayout authentication={false}>
+            <SignUp />
+          </AuthLayout>
+        ),
       },
       {
         path: "login",
-        element: <AuthLayout authentication={false}><Login /></AuthLayout>,
+        element: (
+          <AuthLayout authentication={false}>
+            <Login />
+          </AuthLayout>
+        ),
       },
       {
         path: "dashboard",
-        element: <AuthLayout authentication={true}><Dashboard /></AuthLayout>,
+        element: (
+          <AuthLayout authentication={true}>
+            <Dashboard />
+          </AuthLayout>
+        ),
       },
       {
         path: "*", // Catch-all for undefined routes
-        element: <ErrorPage/>, // Replace with your 404 component
+        element: <ErrorPage />, // Replace with your 404 component
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminApp />,
+    children: [
+      {
+        path: "/admin/dashboard",
+        element: (
+          <AdminAuthLayout authentication={true}>
+            <AdminDashboard />
+          </AdminAuthLayout>
+        ),
+      },
+      {
+        path: "/admin/signin",
+        element: (
+          <AdminAuthLayout authentication={false}>
+            <AdminSignIn />
+          </AdminAuthLayout>
+        ),
+      },
+      {
+        path: "/admin/users",
+        element: (
+          <AdminAuthLayout authentication={true}>
+            <AdminUsers />
+          </AdminAuthLayout>
+        ),
+      },
+      {
+        path: "/admin/problems",
+        element: (
+          <AdminAuthLayout authentication={true}>
+            <AdminProblems />
+          </AdminAuthLayout>
+        ),
       },
     ],
   },
 ]);
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <RouterProvider router={router} />
   </Provider>

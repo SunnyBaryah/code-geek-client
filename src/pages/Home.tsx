@@ -3,12 +3,16 @@ import logo from "/logo.svg";
 import tickIcon from "/tickIcon.svg";
 import questionIcon from "/question-circle.svg";
 import codeIcon from "/code-icon.svg";
+import adminImg from "/admin-png.png";
+import codingImg from "/coding-png.png";
+import settingsIcon from "/settings-icon.svg";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "./../components/common/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../store/store";
 import { motion } from "framer-motion";
+
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const status = useSelector((state: RootState) => state.auth.status);
@@ -36,7 +40,7 @@ export default function Home() {
               <span className="text-[#FFC100]">Geek</span>
             </h1>
           </div>
-          <div className="flex flex-col xl:flex-row justify-center xl:justify-between items-center gap-8 md:gap-12 xl:gap-20 w-[95%] xl:w-[90%] 2xl:w-[80%] mx-auto">
+          <div className="flex flex-col xl:flex-row  justify-center xl:justify-between items-center gap-8 md:gap-12 xl:gap-20 w-[95%] xl:w-[90%] 2xl:w-[80%] mx-auto">
             <div className="w-[95%] xl:w-[70%] flex flex-col justify-between items-center gap-10">
               <h2 className="text-4xl text-center md:text-5xl xl:text-6xl font-bold ">
                 <span className="leading-tight">Master Coding</span>
@@ -82,7 +86,10 @@ export default function Home() {
             <h1 className="text-center font-bold text-3xl md:text-4xl xl:text-5xl">
               How to begin your journey?
             </h1>
-            <div className="  px-6 py-6 rounded-md flex flex-col gap-5 w-[95%] xl:w-[80%] mx-auto text-xl md:text-2xl xl:text-3xl">
+            <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
+              <img src={codingImg} className="w-[90%] mx-auto" />
+            </div>
+            <div className="  px-6 py-6 rounded-md flex flex-col gap-5 w-[95%] xl:w-[70%] mx-auto text-xl md:text-2xl xl:text-3xl">
               <div className="flex items-center justify-between gap-10">
                 <span>1. Create your account</span>
                 <span>
@@ -108,6 +115,9 @@ export default function Home() {
             <h1 className=" text-center font-bold text-3xl xl:text-4xl leading-tight">
               Are you ready to tackle coding challenges?
             </h1>
+            <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
+              <img src={codingImg} className="w-[90%] mx-auto" />
+            </div>
             <Button
               onClick={() => {
                 navigate("/problems");
@@ -116,6 +126,24 @@ export default function Home() {
             >
               <>Explore Problems</>
             </Button>
+          </div>
+        )}
+        {isLoggedIn === false && (
+          <div className="mt-14 bg-gray-600 flex flex-col gap-12 w-[95%] xl:w-[70%] mx-auto rounded-md shadow-md pt-10 pb-5">
+            <h1 className="text-center font-bold text-3xl md:text-4xl xl:text-6xl">
+              Are you an Admin?
+            </h1>
+            <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
+              <img src={adminImg} className="w-[90%] mx-auto" />
+            </div>
+            <Link
+              to="/admin/signin"
+              className="w-[80%] md:w-[45%] mx-auto mb-10 rounded-md bg-[#FFC100] text-gray-800 flex justify-center items-center gap-3 hover:scale-105 transition duration-150 p-4 text-lg md:text-2xl"
+            >
+              <img className="w-[30px]" src={settingsIcon} />
+              Admin Portal
+              {/* <img className="w-[30px]" src={settingsIcon} /> */}
+            </Link>
           </div>
         )}
       </div>

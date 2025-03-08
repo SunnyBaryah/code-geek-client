@@ -1,3 +1,4 @@
+import { Problem } from "@/interfaces/Problem.ts";
 import axios from "../axios.ts";
 interface problemData {
   code?: string;
@@ -28,6 +29,33 @@ export class ProblemService {
     const response = await axios.get("/problem/findAll");
     // console.log(response);
     return response;
+  }
+  async addProblem(data: Problem) {
+    try {
+      const response = await axios.post("/problem/add-problem", { data });
+      // console.log(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async updateProblem(data: Problem) {
+    try {
+      const response = await axios.put("/problem/update-problem", { data });
+      // console.log(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async deleteProblem(data: Problem) {
+    try {
+      const response = await axios.delete("/problem/delete-problem", { data });
+      // console.log(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
