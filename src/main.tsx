@@ -18,6 +18,10 @@ import AdminSignIn from "./pages/Admin/AdminSignIn.tsx";
 import AdminProblems from "./pages/Admin/AdminProblems.tsx";
 import AdminUsers from "./pages/Admin/AdminUsers.tsx";
 import AdminAuthLayout from "./components/common/AdminAuthLayout.tsx";
+import AdminContests from "./pages/Admin/AdminContests.tsx";
+import ContestsPage from "./pages/Contests.tsx";
+import ContestPage from "./pages/Contest.tsx";
+import ContestRankings from "./pages/ContestRankings.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +41,30 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={true}>
             <ProblemsPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "contests",
+        element: (
+          <AuthLayout authentication={true}>
+            <ContestsPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "contests/:contestId",
+        element: (
+          <AuthLayout authentication={true}>
+            <ContestPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "contests/:contestId/rankings",
+        element: (
+          <AuthLayout authentication={true}>
+            <ContestRankings />
           </AuthLayout>
         ),
       },
@@ -111,6 +139,14 @@ const router = createBrowserRouter([
         element: (
           <AdminAuthLayout authentication={true}>
             <AdminProblems />
+          </AdminAuthLayout>
+        ),
+      },
+      {
+        path: "/admin/contests",
+        element: (
+          <AdminAuthLayout authentication={true}>
+            <AdminContests />
           </AdminAuthLayout>
         ),
       },

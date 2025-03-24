@@ -18,7 +18,7 @@ export default function Question(props: { question: QuestionData }) {
       exit={{ opacity: 0 }}
       className="h-full text-white border-t-2 border-gray-900 px-4 py-3 max-h-[80vh] overflow-auto"
     >
-      <h1 className="font-semibold text-2xl text-gray-200 mb-3">{`${props.question.id}. ${props.question.title} `}</h1>
+      <h1 className="font-semibold text-2xl text-gray-200 mb-3">{`${props.question.title} `}</h1>
       <p
         className={`${getDifficultyClass(
           props.question.difficulty

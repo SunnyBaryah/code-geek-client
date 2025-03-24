@@ -5,6 +5,7 @@ import LogoutBtn from "./LogoutBtn";
 import { Link } from "react-router-dom";
 import logo from "/logo-png.png";
 import puzzleIcon from "/puzzle-icon.svg";
+import trophyIcon from "/trophy-icon2.svg";
 import { RootState } from "../../store/store";
 import homeIcon from "/user-duotone-icon.svg";
 export default function Header() {
@@ -35,7 +36,7 @@ export default function Header() {
         </Link>
 
         <nav className="ml-auto">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 md:gap-5">
             {navItems.map((item) =>
               item.active ? (
                 <div key={item.name} onClick={() => navigate(item.slug)}>
@@ -60,6 +61,14 @@ export default function Header() {
                 className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
               >
                 <img className=" h-[35px]" src={puzzleIcon} />
+              </Link>
+            )}
+            {status && (
+              <Link
+                to="/contests"
+                className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
+              >
+                <img className=" h-[35px]" src={trophyIcon} />
               </Link>
             )}
             {status && <LogoutBtn />}

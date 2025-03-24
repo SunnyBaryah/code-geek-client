@@ -5,6 +5,7 @@ import { RootState } from "@/store/store";
 import LogoutBtn from "../Header/LogoutBtn";
 import usersIcon from "/users-icon.svg";
 import questionsIcon from "/questions-icon.svg";
+import trophyIcon from "/trophy-icon.svg";
 const Header = () => {
   // const navigate = useNavigate();
   const status = useSelector((state: RootState) => state.auth.status);
@@ -17,7 +18,7 @@ const Header = () => {
         </Link>
 
         <nav className="ml-auto">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 md:gap-5">
             {status && (
               <Link
                 to="/admin/users"
@@ -33,6 +34,14 @@ const Header = () => {
                 className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
               >
                 <img className=" h-[35px]" src={questionsIcon} />
+              </Link>
+            )}
+            {status && (
+              <Link
+                to="/admin/contests"
+                className="py-2 mr-2 text-2xl  hover:scale-105 transition duration-150"
+              >
+                <img className=" h-[35px]" src={trophyIcon} />
               </Link>
             )}
             {status && <LogoutBtn />}

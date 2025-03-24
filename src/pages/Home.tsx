@@ -5,6 +5,7 @@ import questionIcon from "/question-circle.svg";
 import codeIcon from "/code-icon.svg";
 import adminImg from "/admin-png.png";
 import codingImg from "/coding-png.png";
+import competitionImg from "/competition2-png.png";
 import settingsIcon from "/settings-icon.svg";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -33,7 +34,7 @@ export default function Home() {
     >
       <div className="w-[80%] mx-auto text-white py-20">
         <div className="min-h-screen">
-          <div className="mb-28 xl:mb-32 flex justify-center items-center gap-4">
+          <div className="mb-28 xl:mb-32 flex justify-center items-center gap-2 md:gap-5">
             <img className="h-[60px] md:h-[95px] xl:h-[110px]" src={logo} />
             <h1 className="text-center text-5xl md:text-6xl xl:text-8xl font-bold">
               <span>Code</span>
@@ -111,21 +112,39 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="bg-gray-600 flex flex-col gap-12 w-[95%] xl:w-[60%] mx-auto lg:mt-6 xl:mt-0 rounded-md shadow-md pt-5 pb-5 px-3">
-            <h1 className=" text-center font-bold text-3xl xl:text-4xl leading-tight">
-              Are you ready to tackle coding challenges?
-            </h1>
-            <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
-              <img src={codingImg} className="w-[90%] mx-auto" />
+          <div>
+            <div className="bg-gray-600 flex flex-col gap-12 w-[95%] xl:w-[60%] mx-auto lg:mt-6 xl:mt-0 rounded-md shadow-md pt-5 pb-5 px-3">
+              <h1 className=" text-center font-bold text-3xl xl:text-4xl leading-tight">
+                Are you ready to tackle coding challenges?
+              </h1>
+              <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
+                <img src={codingImg} className="w-[90%] mx-auto" />
+              </div>
+              <Button
+                onClick={() => {
+                  navigate("/problems");
+                }}
+                className="bg-[#FFC100] w-[80%] md:w-[50%] mx-auto py-2 text-gray-800 rounded-md"
+              >
+                <>Explore Problems</>
+              </Button>
             </div>
-            <Button
-              onClick={() => {
-                navigate("/problems");
-              }}
-              className="bg-[#FFC100] w-[50%] mx-auto py-2 text-gray-800 rounded-md"
-            >
-              <>Explore Problems</>
-            </Button>
+            <div className="bg-gray-600 flex flex-col gap-12 w-[95%] xl:w-[60%] mx-auto mt-3 lg:mt-9 rounded-md shadow-md pt-5 pb-5 px-3">
+              <h1 className=" text-center font-bold text-3xl xl:text-4xl leading-tight">
+                Want some competition in coding?
+              </h1>
+              <div className="bg-gray-500 w-[85%] md:w-[55%] mx-auto rounded-lg shadow-lg">
+                <img src={competitionImg} className="w-[90%] mx-auto" />
+              </div>
+              <Button
+                onClick={() => {
+                  navigate("/contests");
+                }}
+                className="bg-[#FFC100] w-[80%] md:w-[50%] mx-auto py-2 text-gray-800 rounded-md"
+              >
+                <>Explore Contests</>
+              </Button>
+            </div>
           </div>
         )}
         {isLoggedIn === false && (
