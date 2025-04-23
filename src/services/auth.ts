@@ -22,17 +22,32 @@ export class AuthService {
   async login(props: { email: string; password: string }) {
     const response = await axios.post("/users/login", props);
     if (response.status === 200) {
+      localStorage.setItem("accessToken", response.data.data.accessToken);
       return response;
     }
     return null;
   }
   async getCurrentUser() {
-    const response = await axios.get("/users/get-current-user");
-    if (response.status === 200) {
-      return response;
-    } else return null;
+    let token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      // Try to refresh token if accessToken is missing
+      try {
+        const res = await axios.get("/users/refresh-access-token");
+        token = res.data.accessToken;
+        localStorage.setItem("accessToken", token!);
+      } catch (err) {
+        // console.log("Session expired, please log in again.");
+        return null;
+      }
+    }
+
+    return axios.get("/users/get-current-user", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   }
   async logout() {
+    localStorage.removeItem("accessToken");
     const response = await axios.post("/users/logout");
     if (response.status === 200) {
       return response;
