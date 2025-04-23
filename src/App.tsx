@@ -3,15 +3,18 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/Header/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import authService from "./services/auth";
 import { useDispatch } from "react-redux";
 import { login as authLogin } from "./store/authSlice.ts";
+import { motion, AnimatePresence } from "framer-motion";
 function App() {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const checkIfLoggedIn = async () => {
       try {
+        setLoading(true);
         const response = await authService.getCurrentUser();
         // console.log(response);
         if (response?.data?.statusCode === 200) {
@@ -23,6 +26,7 @@ function App() {
           };
           dispatch(authLogin(serializableUserData));
         }
+        setLoading(false);
         // console.log("User :", user);
       } catch (err) {
         console.log("User not logged in");
@@ -31,11 +35,34 @@ function App() {
     checkIfLoggedIn();
   }, []);
   return (
-    <div className="bg-gray-900 min-h-screen font-display">
-      <Header />
-      <Outlet />
-      <ToastContainer theme="dark" />
-    </div>
+    <AnimatePresence>
+      {loading === true ? (
+        <motion.div
+          key="loader"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ y: "-100vh" }} // Slide fully out of screen upwards
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="fixed inset-0 bg-gray-900 z-50 text-white font-display flex justify-center items-center border-b-[1px] border-white"
+        >
+          <span className="loading-spinner-2"></span>
+          <span className="ml-3 text-xl">Loading...</span>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="content"
+          initial={{ opacity: 1, height: "auto" }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }} // Collapse height to 0
+          transition={{ duration: 0.3 }}
+          className="bg-gray-900 min-h-screen font-display"
+        >
+          <Header />
+          <Outlet />
+          <ToastContainer theme="dark" />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
