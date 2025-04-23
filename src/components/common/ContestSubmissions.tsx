@@ -78,9 +78,9 @@ export default function ContestSubmissions({
               >
                 <h1
                   className={`${
-                    submission.status === "Wrong Answer"
-                      ? "text-red-600"
-                      : "text-green-600"
+                    submission.status === "Accepted"
+                      ? "text-green-600"
+                      : "text-red-600"
                   } font-semibold`}
                 >
                   {submission.status}

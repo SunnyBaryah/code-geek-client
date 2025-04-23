@@ -7,6 +7,13 @@ export class AIService {
     }
     return null;
   }
+  async getPlagScore(props: { prompt: string }) {
+    const response = await axios.post(`/ai/getPlagScore`, props);
+    if (response.status === 200) {
+      return response;
+    }
+    return null;
+  }
 }
 const aiService = new AIService();
 

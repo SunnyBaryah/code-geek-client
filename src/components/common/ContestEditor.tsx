@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ContestEditorProps } from "@/interfaces/ContestEditorProps.ts";
 import contestSubmissionService from "@/services/contestSubmission.ts";
+import aiService from "@/services/ai.ts";
 
 export default function ContestEditor(props: ContestEditorProps) {
   const monacoEditorRef = useRef<monacoEditor.IStandaloneCodeEditor | null>(
@@ -235,7 +236,16 @@ export default function ContestEditor(props: ContestEditorProps) {
         // console.log(wrong.length);
         let finalStatus = "";
         if (wrong.length == 0) {
-          finalStatus = "Accepted";
+          //plag check
+          const prompt = "Give me a plagiarism score for this code : " + code;
+          const response = await aiService.getPlagScore({ prompt });
+          const score = response?.data.data.response;
+          // console.log(score);
+          if (Number(score) > 70) {
+            finalStatus = "Accepted";
+          } else {
+            finalStatus = "Rejected! Copied Code";
+          }
           // console.log(response);
         } else {
           finalStatus = "Wrong Answer";
