@@ -9,16 +9,27 @@ import authService from "../../services/auth.ts";
 import { toast } from "react-toastify";
 import loadingIcon from "/loading-2-icon.svg";
 import { motion } from "framer-motion";
-interface LoginForm {
-  email: string;
-  password: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInSchema } from "../../schemas/signInSchema.ts";
+import { z } from "zod";
+
+type SignInFormData = z.infer<typeof signInSchema>;
+
+// interface LoginForm {
+//   email: string;
+//   password: string;
+// }
+
 export default function Login() {
   const dispatch = useDispatch();
   const [error, setError] = useState<string>("");
-  const { register, handleSubmit } = useForm<LoginForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({ resolver: zodResolver(signInSchema) });
   const [loading, setLoading] = useState<boolean>(false);
-  const login: SubmitHandler<LoginForm> = async (data) => {
+  const login: SubmitHandler<SignInFormData> = async (data) => {
     setError("");
     setLoading(true);
     try {
@@ -91,6 +102,11 @@ export default function Login() {
               label="Email: "
               placeholder="Enter your email "
               type="email"
+              err={
+                errors.email && errors.email.message
+                  ? { message: errors.email.message }
+                  : { message: "" }
+              }
               {...register("email", {
                 required: true,
               })}
@@ -98,6 +114,11 @@ export default function Login() {
             <Input
               label="Password: "
               type="password"
+              err={
+                errors.password && errors.password.message
+                  ? { message: errors.password.message }
+                  : { message: "" }
+              }
               placeholder="Enter your password"
               {...register("password", {
                 required: true,

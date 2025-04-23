@@ -1,13 +1,14 @@
 import { forwardRef, useId, Ref } from "react";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
-    className?: string;
-    type?: string; // You can restrict this further to specific types if needed
+  label?: string;
+  className?: string;
+  type?: string; // You can restrict this further to specific types if needed
+  err?: { message: string };
 }
 // forwardRef is used to pass the reference of the data entered inside input tag
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, className = "", type = "text", ...props },
-  ref:Ref<HTMLInputElement>
+  { err, label, className = "", type = "text", ...props },
+  ref: Ref<HTMLInputElement>
 ) {
   const id = useId();
   return (
@@ -26,6 +27,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           id={id}
         />
       }
+      {err?.message && err?.message.length > 0 && (
+        <p className="text-red-500">{err.message}</p>
+      )}
     </div>
   );
 });

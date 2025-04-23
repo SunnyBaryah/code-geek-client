@@ -9,19 +9,32 @@ import Input from "../common/Input.tsx";
 import Button from "../common/Button.tsx";
 import loadingIcon from "/loading-2-icon.svg";
 import { motion } from "framer-motion";
-interface RegisterForm {
-  email: string;
-  password: string;
-  username: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "../../schemas/signUpSchema.ts";
+import { z } from "zod";
+
+type SignUpFormData = z.infer<typeof signUpSchema>;
+
+// interface RegisterForm {
+//   email: string;
+//   password: string;
+//   username: string;
+// }
+
 export default function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { register, handleSubmit } = useForm<RegisterForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
+  });
 
-  const create: SubmitHandler<RegisterForm> = async (data) => {
+  const create: SubmitHandler<SignUpFormData> = async (data) => {
     setLoading(true);
     try {
       const userData = await authService.createAccount(data);
@@ -80,6 +93,11 @@ export default function SignUp() {
             <Input
               label="Username: "
               placeholder="Enter your username"
+              err={
+                errors.username && errors.username.message
+                  ? { message: errors.username.message }
+                  : { message: "" }
+              }
               {...register("username", {
                 required: true,
               })}
@@ -88,6 +106,11 @@ export default function SignUp() {
               label="Email: "
               placeholder="Enter your email"
               type="email"
+              err={
+                errors.email && errors.email.message
+                  ? { message: errors.email.message }
+                  : { message: "" }
+              }
               {...register("email", {
                 required: true,
               })}
@@ -96,6 +119,11 @@ export default function SignUp() {
               label="Password :"
               placeholder="Enter your password"
               type="password"
+              err={
+                errors.password && errors.password.message
+                  ? { message: errors.password.message }
+                  : { message: "" }
+              }
               {...register("password", {
                 required: true,
               })}
