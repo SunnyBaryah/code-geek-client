@@ -241,7 +241,7 @@ export default function ContestEditor(props: ContestEditorProps) {
           const response = await aiService.getPlagScore({ prompt });
           const score = response?.data.data.response;
           // console.log(score);
-          if (Number(score) > 70) {
+          if (Number(score) < 30) {
             finalStatus = "Accepted";
           } else {
             finalStatus = "Rejected! Copied Code";
