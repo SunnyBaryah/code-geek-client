@@ -31,18 +31,14 @@ export default function ContestRankings() {
   const [loading, setLoading] = useState<Boolean>(false);
   const [data, setData] = useState<UserSubmissionResult[]>();
 
-  const formatTime = (ms: number) => {
-    if (ms <= 0) return "00:00:00";
+  const formatTime = (seconds: number) => {
+    if (seconds <= 0) return "00:00:00";
 
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
-      2,
-      "0"
-    );
-    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const remainingSeconds = String(Math.floor(seconds % 60)).padStart(2, "0");
 
-    return `${hours} : ${minutes} : ${seconds}`;
+    return `${hours} : ${minutes} : ${remainingSeconds}`;
   };
 
   useEffect(() => {
@@ -102,9 +98,11 @@ export default function ContestRankings() {
           })
           .sort(
             (a, b) =>
-              b.distinctQuestionsCount - a.distinctQuestionsCount ||
-              b.maxSubmissionTime - a.maxSubmissionTime
+              b.distinctQuestionsCount - a.distinctQuestionsCount || // Higher is better
+              a.maxSubmissionTime - b.maxSubmissionTime // Lower is better
           );
+
+        console.log("Sorted data : ", sortedData);
 
         // Step 3: Set data state
         setData(sortedData);

@@ -22,7 +22,7 @@ export const BOILERPLATES: BOILERPLATE[] = [
   {
     problem_id: 3,
     langs: [
-      `#include<bits/stdc++.h>\nusing namespace std;\nstring reverseWordsInString(string &s){\n    //type your code here\n}\nint main(){\n    string s;\n    getline(cin, s);\n    string ans=reverseWordsInString(s);\n    for(int i=0; i<n; i++){\n        cout<<ans[i];\n    }\n}`,
+      `#include<bits/stdc++.h>\nusing namespace std;\nstring reverseWordsInString(string &s){\n    //type your code here\n}\nint main(){\n    string s;\n    getline(cin, s);\n    string ans=reverseWordsInString(s);\n    int n=ans.size();\n    for(int i=0; i<n; i++){\n        cout<<ans[i];\n    }\n}`,
       `const input=require('fs').readFileSync('/dev/stdin').toString().trim();\nfunction reverseWordsInString(str){\n    //type your code here\n}\nconsole.log(reverseWordsInString(input));`,
       `import sys\ninput = sys.stdin.read().strip()\ndef reverseWordsInString(s):\n    # type your code here\n    pass\nprint(reverseWordsInString(input))`,
     ],
